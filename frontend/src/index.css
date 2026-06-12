@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme {
+  /* Backgrounds */
+  --color-bg-main: #121413;
+  --color-bg-surface: #1a1e1c;
+
+  /* Branding & Accents */
+  --color-brand-green: #0b4627;
+  --color-brand-green-hover: #115e35;
+  --color-accent-gold: #c5a059;
+  --color-accent-gold-hover: #b38f4b;
+
+  /* Typography */
+  --color-text-muted: #a0a5a2;
+}
+
+/* Remove scrollbar globally */
+html::-webkit-scrollbar {
+  display: none;
+}
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar on any element */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url(./assets/Fonts/Inter-VariableFont_opsz\,wght.ttf);
+}
+@font-face {
+  font-family: Jakarta;
+  src: url(./assets//Fonts/PlusJakartaSans-VariableFont_wght.ttf);
+}
+
+.custom-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* TRACK */
+.custom-range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: #000; /* black background */
+  border-radius: 999px;
+}
+
+/* THUMB */
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 12px;
+  width: 12px;
+  background: #fff; /* white slider */
+  border-radius: 50%;
+  margin-top: -4px;
+  cursor: pointer;
+}
+
+/* FIREFOX TRACK */
+.custom-range::-moz-range-track {
+  height: 4px;
+  background: #000;
+  border-radius: 999px;
+}
+
+/* FIREFOX THUMB */
+.custom-range::-moz-range-thumb {
+  height: 12px;
+  width: 12px;
+  background: #fff;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
