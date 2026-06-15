@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { CiHeart } from "react-icons/ci";
+import { MusicContenxt } from "../Context/AppContext";
+import { BsFillPlayFill,BsFillPauseFill } from "react-icons/bs";
 
 function Home() {
+  const { naats, loading , setNowPlaying , nowPlaying , playTrack , isPlaying } = useContext(MusicContenxt);
+ 
+
   return (
-    <section className="w-full h-full mb-20 font-[Jakarta] text-white">
+    <section className="w-full  mb-40 font-[Jakarta]  text-white">
       <div className="w-full px-10 flex items-center justify-between gap-5">
-        <div className="w-[60%] h-80 flex flex-col items-start gap-2 justify-center rounded-lg bg-[url(./images/surahRehman.jpg)] relative bg-cover bg-center">
+        <div className="w-[60%] h-80 flex flex-col items-start gap-2 justify-center rounded-xl border border-gray-300 overflow-hidden bg-[url(./images/surahRehman.jpg)] relative bg-cover bg-center">
           <div className="w-full h-full bg-black/50 flex flex-col items-start gap-2 justify-center   p-5">
             <span className="px-4 py-1 bg-yellow-600 rounded-full text-xs  text-yellow-200">
               Daily Reflection
@@ -20,14 +25,16 @@ function Home() {
             </button>
           </div>
         </div>
-        <div className="w-[35%] h-full flex flex-col items-center justify-center p-5 gap-5 bg-black">
+        <div className="w-[35%] h-80 rounded-xl flex flex-col items-center justify-evenly p-5 gap-5 bg-bg-surface">
           <div className="w-full flex font-semibold items-center justify-between ">
             <p>Continue Listening</p> <p>...</p>
           </div>
-          <div className="w-[50%] h-25 rounded-lg  bg-gray-600 "></div>
+          <div className="w-[40%] h-25 rounded-lg flex items-center justify-center  bg-emerald-200/40 ">
+          <span onClick={()=>{playTrack(nowPlaying)}} className="w-10 h-10 flex items-center justify-center cursor-pointer bg-emerald-500 rounded-full">  {isPlaying ? <BsFillPauseFill/> : <BsFillPlayFill/>}  </span>
+          </div>
           <div className="text-center">
-            <h1>Beaytiull Darood</h1>
-            <p>Various Artist</p>
+            <h1>{nowPlaying?nowPlaying.title : 'none'}</h1>
+            <p>{nowPlaying?nowPlaying.artistName : 'none'}</p>
           </div>
         </div>
       </div>
@@ -39,22 +46,36 @@ function Home() {
           <button className="cursor-pointer">see all </button>
         </div>
         <div className="w-full flex items-center gap-5 mt-5 ">
-          <div className="w-[20%] group h-60 ">
-            <div className="w-full h-[70%] relative group border-gray-300 cursor-pointer rounded-lg overflow-hidden  ">
-              <img
-                className="w-full h-full object-cover object-center"
-                src="https://i.pinimg.com/736x/11/05/5f/11055f59a68bcbcf257dac2088dfc225.jpg"
-                alt=""
-              />
-              <div className="w-full h-full bg-linear-to-t from-black from-40% translate-y-100 transition-transform duration-200 group-hover:translate-y-0 to-transparent flex items-center justify-center  absolute top-0 left-0">
-                <div className="w-15 h-15 bg-yellow-300 rounded-full"></div>
+          {naats.map((item, idx) => {
+            return (
+              <div
+                key={idx}
+                onClick={() => playTrack(item)}
+                className="w-[20%] group h-60 flex flex-col gap-2"
+              >
+                <div className="w-full h-48 relative border border-gray-300 cursor-pointer rounded-lg overflow-hidden">
+                  <img
+                    className="w-full h-full object-cover object-center"
+                    src={item.bannerImg}
+                    alt={item.title}
+                  />
+
+                  <div className="w-full h-full bg-linear-to-t from-black from-40% to-transparent absolute top-0 left-0 flex items-center justify-center transform translate-y-full transition-transform duration-300 ease-in-out group-hover:translate-y-0">
+                    <div className="w-15 h-15 bg-yellow-300 rounded-full flex items-center justify-center shadow-lg"></div>
+                  </div>
+                </div>
+
+                <div className="mt-1">
+                  <h1 className="group-hover:text-emerald-300 transition-colors duration-300 text-base font-medium line-clamp-2 leading-snug">
+                    {item.title}
+                  </h1>
+                  <p className="text-sm text-gray-400 truncate mt-0.5">
+                    {item.artistName}
+                  </p>
+                </div>
               </div>
-            </div>
-            <h1 className="group-hover:text-emerald-300 transition-colors duration-300 text-lg">
-              Tajdare Haram
-            </h1>
-            <p>Atif Aslam</p>
-          </div>
+            );
+          })}
         </div>
       </div>
 
@@ -100,7 +121,9 @@ function Home() {
               src="https://i.pinimg.com/736x/11/05/5f/11055f59a68bcbcf257dac2088dfc225.jpg"
               alt=""
             />
-            <p className="text-xs text-gray-300 group-hover:text-white ">Mishri Alfasi</p>
+            <p className="text-xs text-gray-300 group-hover:text-white ">
+              Mishri Alfasi
+            </p>
           </div>
         </div>
       </div>
