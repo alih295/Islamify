@@ -1,0 +1,21 @@
+const multer = require("multer");
+const path = require("path");
+
+// Define storage strategy
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Make sure this folder exists in your root
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname),
+    );
+  },
+});
+
+// Create the middleware instance
+const upload = multer({ storage: storage });
+
+module.exports = upload;
