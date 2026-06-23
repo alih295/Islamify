@@ -48,6 +48,7 @@ const AppContext = ({ children }) => {
   // Audio ke time track karne ke liye states
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [user , setUser] = useState(null)
 
   const audioRef = useRef(new Audio());
 
@@ -125,6 +126,8 @@ const AppContext = ({ children }) => {
         currentTime,
         duration,
         handleSliderChange,
+        user,
+        setUser
       }}
     >
       {children}

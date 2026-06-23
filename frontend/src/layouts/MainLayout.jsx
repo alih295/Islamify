@@ -1,5 +1,5 @@
 import React, { useContext , useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet , Link } from "react-router-dom";
 
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoPersonCircleOutline } from "react-icons/io5";
@@ -72,7 +72,9 @@ function MainLayout() {
         <div className="flex flex-col w-[80%] h-full">
           <header className="h-12 flex items-center justify-end gap-5 px-6 text-xl border-b border-gray-800">
             <IoMdNotificationsOutline className="cursor-pointer transition-colors duration-200 hover:text-emerald-100" />
-            <IoPersonCircleOutline className="transition-colors duration-200 hover:text-emerald-100" />
+            <Link to={'/register'}>
+            <IoPersonCircleOutline className="transition-colors cursor-pointer  duration-200 hover:text-emerald-100" />
+            </Link> 
           </header>
 
           <div className="flex-1 overflow-auto p-5 scrollbar-hide">
