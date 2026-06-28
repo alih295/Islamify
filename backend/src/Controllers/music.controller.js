@@ -25,22 +25,30 @@ const createMusic = async (req, res) => {
         });
     }
 
-    // 4. File check
-    if (!req.file) {
+    const audioFile = req.files?.["audioFile"]?.[0];
+    const imgFile = req.files?.["coverImg"]?.[0];
+
+    const audioUrl = audioFile ? audioFile.filename : null;
+    const coverImg = imgFile ? imgFile.filename : null;
+
+    if (!audioFile) {
       return res
         .status(400)
         .json({ success: false, message: "Audio file is required!" });
     }
+    if (!imgFile) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Cover image is required!" });
+    }
 
-    // Agar Google Drive use kar rahe hain toh drive ka link, warna local path
-    const audioUrl = req.file.path || req.file.webViewLink;
-
-    // 5. Database mein Save karein
+    // 4. Database mein Save karein
     const newMusic = await musicModel.create({
       title,
       category,
       audioUrl,
-      artist: req.user.id, // Yeh ID aapke 'authUser' middleware se aa rahi hai
+      coverImg,
+      artist: req.user.id,
     });
 
     return res.status(201).json({ success: true, data: newMusic });
@@ -52,7 +60,7 @@ const createMusic = async (req, res) => {
 const getAllMusic = async (req, res) => {
   const music = await musicModel.find();
 
-  res.status(200).json({ message: "music found is ", music });
+  res.status(200).json({ success: true, message: "music found is ", music });
 };
 
 module.exports = { getAllMusic, createMusic };

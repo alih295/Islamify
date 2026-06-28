@@ -4,7 +4,15 @@ const router = express.Router();
 const upload = require("../config/multer/multer");
 const authUser = require("../middlewares/user.auth");
 
-router.get("/get", authUser, getAllMusic);
-router.post("/create", authUser, upload.single("audioFile"), createMusic);
+router.get("/get", getAllMusic);
+router.post(
+  "/create",
+  authUser,
+  upload.fields([
+    { name: "audioFile", maxCount: 1 }, // Audio file ke liye field name
+    { name: "coverImg", maxCount: 1 }, // Image file ke liye field name
+  ]),
+  createMusic,
+);
 
 module.exports = router;

@@ -9,7 +9,7 @@ function Login() {
   const navigate = useNavigate(); // 2. Navigate function ko initialize kiya
 
   // 3. Hook se login ke sath loading aur error states bhi nikal lein
-  const { login, user, loading, error } = useAuthApi();
+  const { login, user, loading, error , setError } = useAuthApi();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

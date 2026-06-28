@@ -1,5 +1,5 @@
-import React, { useContext , useState } from "react";
-import { Outlet , Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Outlet, Link } from "react-router-dom";
 
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoPersonCircleOutline } from "react-icons/io5";
@@ -18,15 +18,28 @@ import { MusicContenxt } from "../Context/AppContext";
 
 function MainLayout() {
   // Context se saara dynamic data aur slider functions nikal liye
-  const { 
-    nowPlaying, 
-    isPlaying, 
-    togglePlay, 
-    currentTime, 
-    duration, 
-    handleSliderChange 
+  const {
+    nowPlaying,
+    isPlaying,
+    togglePlay,
+    currentTime,
+    duration,
+    handleSliderChange,
+    audioRef,
   } = useContext(MusicContenxt);
-  const [volume, setVolume] = useState(0)
+  const [volume, setVolume] = useState(0.5);
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value);
+
+    // 1. React state ko update karein taake slider move ho
+    setVolume(newVolume);
+
+    // 2. Actual audio element ka volume change karein (Most Important)
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+  };
 
   // Seconds ko MM:SS format mein convert karne ke liye helper function
   const formatTime = (timeInSeconds) => {
@@ -72,9 +85,9 @@ function MainLayout() {
         <div className="flex flex-col w-[80%] h-full">
           <header className="h-12 flex items-center justify-end gap-5 px-6 text-xl border-b border-gray-800">
             <IoMdNotificationsOutline className="cursor-pointer transition-colors duration-200 hover:text-emerald-100" />
-            <Link to={'/register'}>
-            <IoPersonCircleOutline className="transition-colors cursor-pointer  duration-200 hover:text-emerald-100" />
-            </Link> 
+            <Link to={"/register"}>
+              <IoPersonCircleOutline className="transition-colors cursor-pointer  duration-200 hover:text-emerald-100" />
+            </Link>
           </header>
 
           <div className="flex-1 overflow-auto p-5 scrollbar-hide">
@@ -134,9 +147,9 @@ function MainLayout() {
           {/* LEFT SIDE */}
           <div className="text-center flex items-center gap-5">
             {/* Khali div ki jagah active naat ki dynamic image cover lagayi */}
-            <img 
-              src={nowPlaying.bannerImg} 
-              alt={nowPlaying.title} 
+            <img
+              src={`http://localhost:4000/uploads/${nowPlaying.coverImg}`}
+              alt={nowPlaying.title}
               className="h-12 w-12 object-cover rounded bg-brand-green"
             />
 
@@ -159,22 +172,20 @@ function MainLayout() {
                 {formatTime(currentTime)}
               </p>
 
-             <input
-  type="range"
-  min="0"
-  max={duration || 0}
-  value={currentTime}
-  onChange={handleSliderChange}
-  className="w-full custom-range cursor-pointer appearance-none h-1.5 rounded-lg bg-gray-700 accent-emerald-500"
-  style={{
-    background: `linear-gradient(to right, #10b981 0%, #10b981 ${duration ? (currentTime / duration) * 100 : 0}%, #374151 ${duration ? (currentTime / duration) * 100 : 0}%, #374151 100%)`
-  }}
-/>
+              <input
+                type="range"
+                min="0"
+                max={duration || 0}
+                value={currentTime}
+                onChange={handleSliderChange}
+                className="w-full custom-range cursor-pointer appearance-none h-1.5 rounded-lg bg-gray-700 accent-emerald-500"
+                style={{
+                  background: `linear-gradient(to right, #10b981 0%, #10b981 ${duration ? (currentTime / duration) * 100 : 0}%, #374151 ${duration ? (currentTime / duration) * 100 : 0}%, #374151 100%)`,
+                }}
+              />
 
               {/* Total Time (Dynamic ho gaya) */}
-              <p className="text-xs min-w-[35px]">
-                {formatTime(duration)}
-              </p>
+              <p className="text-xs min-w-[35px]">{formatTime(duration)}</p>
             </div>
 
             {/* CONTROLS */}
@@ -206,11 +217,28 @@ function MainLayout() {
 
           {/* RIGHT SIDE */}
           <div className="w-[20%] h-full flex items-center gap-5 text-2xl justify-end">
-            <CiHeart size="34" className="cursor-pointer hover:text-red-400 transition-colors" />
-            <IoMdShare size="34" className="cursor-pointer hover:text-emerald-300 transition-colors" />
+            <CiHeart
+              size="34"
+              className="cursor-pointer hover:text-red-400 transition-colors"
+            />
+            <IoMdShare
+              size="34"
+              className="cursor-pointer hover:text-emerald-300 transition-colors"
+            />
             <AiTwotoneSound size="34" />
 
-            <input type="range" className="custom-range w-full cursor-pointer" />
+           <input
+  type="range"
+  min="0"
+  max="1"
+  step="0.01" // Smooth moving ke liye 0.01 behtar hai
+  value={volume}
+  onChange={handleVolumeChange}
+  className="custom-range h-2 w-full cursor-pointer appearance-none rounded-lg"
+  style={{
+    background: `linear-gradient(to right, #22c55e ${volume * 100}%, #f3f4f6 ${volume * 100}%)`
+  }}
+/>
           </div>
         </footer>
       </div>

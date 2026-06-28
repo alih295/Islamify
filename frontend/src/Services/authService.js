@@ -21,3 +21,15 @@ export const loginUser = async ({ email, password }) => {
     console.log(err.message);
   }
 };
+
+
+export const checkAuthSession = async () => {
+  try {
+    // backend se profile call ki
+    const response = await api.get("/auth/me");
+    return response.data; // Yeh { success: true, user: {...} } return karega
+  } catch (err) {
+    const errorMessage = err.response?.data?.message || "Session expired";
+    throw new Error(errorMessage);
+  }
+};

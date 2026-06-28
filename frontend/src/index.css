@@ -76,11 +76,12 @@ html {
 }
 
 /* FIREFOX THUMB */
-.custom-range::-moz-range-thumb {
-  height: 12px;
-  width: 12px;
-  background: #fff;
+/* Slider ke gol button (thumb) ko customize karne ke liye */
+.custom-range::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
-  border: none;
+  background: #16a34a; /* Dark Green thumb */
   cursor: pointer;
 }

@@ -1,11 +1,20 @@
 import React, { useContext, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { MusicContenxt } from "../Context/AppContext";
-import { BsFillPlayFill,BsFillPauseFill } from "react-icons/bs";
+import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 
 function Home() {
-  const { naats, loading , setNowPlaying , nowPlaying , playTrack , isPlaying } = useContext(MusicContenxt);
- 
+  const { audio, loading, setNowPlaying, duration ,  nowPlaying, playTrack, isPlaying } =
+    useContext(MusicContenxt);
+
+  
+
+  const naat = audio.filter((elem) => {
+    return elem.category === "naat";
+  });
+  const bayan = audio.filter((elem) => {
+    return elem.category === "byan";
+  });
 
   return (
     <section className="w-full  mb-40 font-[Jakarta]  text-white">
@@ -30,11 +39,19 @@ function Home() {
             <p>Continue Listening</p> <p>...</p>
           </div>
           <div className="w-[40%] h-25 rounded-lg flex items-center justify-center  bg-emerald-200/40 ">
-          <span onClick={()=>{playTrack(nowPlaying)}} className="w-10 h-10 flex items-center justify-center cursor-pointer bg-emerald-500 rounded-full">  {isPlaying ? <BsFillPauseFill/> : <BsFillPlayFill/>}  </span>
+            <span
+              onClick={() => {
+                playTrack(nowPlaying);
+              }}
+              className="w-10 h-10 flex items-center justify-center cursor-pointer bg-emerald-500 rounded-full"
+            >
+              {" "}
+              {isPlaying ? <BsFillPauseFill /> : <BsFillPlayFill />}{" "}
+            </span>
           </div>
           <div className="text-center">
-            <h1>{nowPlaying?nowPlaying.title : 'none'}</h1>
-            <p>{nowPlaying?nowPlaying.artistName : 'none'}</p>
+            <h1>{nowPlaying ? nowPlaying.title : "none"}</h1>
+            <p>{nowPlaying ? nowPlaying.artistName : "none"}</p>
           </div>
         </div>
       </div>
@@ -45,18 +62,18 @@ function Home() {
           <p>Most beloved spiritual poetry this week.</p>
           <button className="cursor-pointer">see all </button>
         </div>
-        <div className="w-full flex items-center gap-5 mt-5 ">
-          {naats.map((item, idx) => {
+        <div className="w-full flex items-center overflow-x-auto scrollbar-hide  gap-5 mt-5 ">
+          {naat.map((item, idx) => {
             return (
               <div
                 key={idx}
                 onClick={() => playTrack(item)}
-                className="w-[20%] group h-60 flex flex-col gap-2"
+                className="w-[20%] shrink-0  group h-60 flex flex-col gap-2"
               >
                 <div className="w-full h-48 relative border border-gray-300 cursor-pointer rounded-lg overflow-hidden">
                   <img
                     className="w-full h-full object-cover object-center"
-                    src={item.bannerImg}
+                    src={`http://localhost:4000/uploads/${item.coverImg}`}
                     alt={item.title}
                   />
 
@@ -85,28 +102,35 @@ function Home() {
         </h1>
         <p className="text-gray-300">Deepen your understanding and faith</p>
         <div className="w-full flex mt-5 items-center justify-between">
-          <div className="w-[49%] group h-20 cursor-pointer flex items-center justify-between">
-            <div className="w-[20%] relative h-full ">
-              <div className="w-full h-full absolute top-0 transition-all duration-300 bg-black/50 group-hover:bg-transparent  bottom-0"></div>
-              <img
-                className="w-full h-full object-cover object-center"
-                src="https://i.pinimg.com/736x/11/05/5f/11055f59a68bcbcf257dac2088dfc225.jpg"
-                alt=""
-              />{" "}
-            </div>
-            <div>
-              <h4 className="text-lg font-[Inter] group-hover:text-emerald-300 ">
-                the power Sabar
-              </h4>
-              <p className="text-gray-300">Mufti Menk</p>
-            </div>
-            <p className="flex items-center gap-4">
-              48:80{" "}
-              <span className="cursor-pointer hover:text-yellow-600">
-                <CiHeart />
-              </span>{" "}
-            </p>
-          </div>
+          {bayan.map((item, idx) => {
+            return (
+              <div
+                onClick={() => playTrack(item)}
+                className="w-[49%] group h-20 cursor-pointer flex items-center justify-between"
+              >
+                <div className="w-[20%] relative h-full ">
+                  <div className="w-full h-full absolute top-0 transition-all duration-300 bg-black/50 group-hover:bg-transparent  bottom-0"></div>
+                  <img
+                    className="w-full h-full object-cover object-center"
+                    src={`http://localhost:4000/uploads/${item.coverImg}`}
+                    alt=""
+                  />{" "}
+                </div>
+                <div>
+                  <h4 className="text-lg font-[Inter] group-hover:text-emerald-300 ">
+                    {item.title}
+                  </h4>
+                  <p className="text-gray-300">{item.artistName}</p>
+                </div>
+                <p className="flex items-center gap-4">
+                  {item.duration}
+                  <span className="cursor-pointer hover:text-yellow-600">
+                    <CiHeart />
+                  </span>{" "}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
 

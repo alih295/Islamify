@@ -6,7 +6,11 @@ const musicSchema = new mongoose.Schema({
     required: [true, "Title is required!"], // Validation message thoda clean kiya
     trim: true // Taaki faltu spaces remove ho jayein (e.g. "  Naat " -> "Naat")
   },
-  
+  coverImg:{
+    type:String,
+
+  }
+  ,
   // STRING KI JAGA USER MODEL KI ID CONNECT KAREIN
   artist: {
     type: mongoose.Schema.Types.ObjectId,

@@ -28,7 +28,7 @@ const registerUser = async (req, res) => {
       { expiresIn: "24h" },
     );
 
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token);
 
     return res.status(201).json({
       message: "User is created successfully",
@@ -60,7 +60,7 @@ const loginUser = async (req, res) => {
     { expiresIn: "24h" },
   );
 
-  res.cookie("token", token, { httpOnly: true });
+  res.cookie("token", token);
 
   return res.status(201).json({
     message: "User is loged in successfully",
@@ -69,4 +69,56 @@ const loginUser = async (req, res) => {
   });
 };
 
-module.exports = { registerUser, loginUser };
+
+ const getMe = async (req, res) => {
+  try {
+
+  
+    const user = await userModel.findById(req.user.id).select("-password"); // Password 
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    console.error("Error in getMe controller:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
+  }
+};
+
+
+const logout = async (req, res) => {
+  try {
+    // Cookie ko delete karne ke liye .clearCookie() ka use karein
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false, // Development mein false, production mein true
+      sameSite: "lax",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "User logged out successfully",
+    });
+    
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error during logout",
+    });
+  }
+};
+
+
+
+module.exports = { registerUser, loginUser ,getMe , logout};
