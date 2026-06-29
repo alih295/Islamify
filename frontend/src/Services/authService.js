@@ -6,8 +6,8 @@ export const registerUser = async (userData) => {
 
     return response.data;
   } catch (err) {
-    console.error("BACKEND SAYS:", err.response?.data); 
-    
+    console.error("BACKEND SAYS:", err.response?.data);
+
     const errorMessage = err.response?.data?.message || "Registration failed";
     throw new Error(errorMessage);
   }
@@ -22,6 +22,17 @@ export const loginUser = async ({ email, password }) => {
   }
 };
 
+export const Creator = async () => {
+  try {
+    const response = await api.get("/auth/get-all-users");
+    return response.data;
+  } catch (err) {
+    console.error("BACKEND SAYS:", err.response?.data);
+    const errorMessage =
+      err.response?.data?.message || "Failed to fetch creator's music";
+    throw new Error(errorMessage);
+  }
+};
 
 export const checkAuthSession = async () => {
   try {

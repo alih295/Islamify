@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { MusicContenxt } from "../Context/AppContext";
-import { loginUser, registerUser } from "../Services/authService";
+import { loginUser, registerUser , Creator} from "../Services/authService";
 import {api} from '../Api/api'
 
 const useAuthApi = () => {
@@ -57,8 +57,19 @@ const useAuthApi = () => {
     }
   };
 
+  const getCreator = async () => {
+    try{
+      const data = await Creator();
+      return data;
+    }
+    catch(err){
+      console.error("Error fetching creator's music:", err.message);
+      setError(err.message);
+    }
+  };
+
   // UI elements ko trigger methods aur tracking states deliver karna
-  return { register, login, user, loading, error ,logout , setError};
+  return { register, login, user, loading, error ,logout , setError, getCreator};
 };
 
 export default useAuthApi;

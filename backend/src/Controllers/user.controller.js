@@ -1,6 +1,7 @@
 const userModel = require("../Models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const musicModel = require("../Models/music.model");
 
 const registerUser = async (req, res) => {
   try {
@@ -69,33 +70,29 @@ const loginUser = async (req, res) => {
   });
 };
 
-
- const getMe = async (req, res) => {
+const getMe = async (req, res) => {
   try {
+    const user = await userModel.findById(req.user.id).select("-password"); // Password
 
-  
-    const user = await userModel.findById(req.user.id).select("-password"); // Password 
-    
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found"
+        message: "User not found",
       });
     }
 
     return res.status(200).json({
       success: true,
-      user
+      user,
     });
   } catch (error) {
     console.error("Error in getMe controller:", error.message);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
+      message: "Internal Server Error",
     });
   }
 };
-
 
 const logout = async (req, res) => {
   try {
@@ -110,7 +107,6 @@ const logout = async (req, res) => {
       success: true,
       message: "User logged out successfully",
     });
-    
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -119,6 +115,52 @@ const logout = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.find({ role: "creator" }).select("-password"); // Password ko exclude karne ke liye
+    if (!users || users.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No users found",
+      });
+    }
+    return res.status(200).json({ 
+      success: true, 
+      users 
+    });
 
 
-module.exports = { registerUser, loginUser ,getMe , logout};
+  } catch (error) {
+    console.error("Error in getAllUsers controller:", error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+
+const getCreatorMusic = async (req, res) => {
+  try {
+    const { creatorId } = req.body; // Ya fir req.params agar URL se bhej rahe ho
+
+    const music = await musicModel.find({ artist: creatorId }); 
+
+
+    return res.status(200).json({ 
+      success: true, 
+      count: music.length, 
+      music 
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message
+    });
+  }
+}
+
+
+
+module.exports = { registerUser, loginUser, getMe, logout, getAllUsers , getCreatorMusic };

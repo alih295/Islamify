@@ -1,13 +1,36 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { CiHeart } from "react-icons/ci";
 import { MusicContenxt } from "../Context/AppContext";
 import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
+import useAuthApi from "../Hooks/useAuthApi";
 
 function Home() {
-  const { audio, loading, setNowPlaying, duration ,  nowPlaying, playTrack, isPlaying } =
-    useContext(MusicContenxt);
+  const {
+    audio,
+    loading,
+    setNowPlaying,
+    duration,
+    nowPlaying,
+    playTrack,
+    isPlaying,
+  } = useContext(MusicContenxt);
+  const [creator, setCreator] = useState([]);
+  const { getCreator } = useAuthApi();
 
-  
+  const getCreators = async (creatorId) => {
+    try {
+      const data = await getCreator();
+      if (data && data.success) {
+        setCreator(data.users);
+      }
+    } catch (err) {
+      console.error("Error fetching creator's music:", err.message);
+    }
+  };
+
+  useEffect(() => {
+    getCreators();
+  }, []);
 
   const naat = audio.filter((elem) => {
     return elem.category === "naat";
@@ -15,6 +38,7 @@ function Home() {
   const bayan = audio.filter((elem) => {
     return elem.category === "byan";
   });
+  console.log(creator.users)
 
   return (
     <section className="w-full  mb-40 font-[Jakarta]  text-white">
@@ -104,7 +128,7 @@ function Home() {
         <div className="w-full flex mt-5 items-center justify-between">
           {bayan.map((item, idx) => {
             return (
-              <div
+              <div key={item._id}
                 onClick={() => playTrack(item)}
                 className="w-[49%] group h-20 cursor-pointer flex items-center justify-between"
               >
@@ -138,17 +162,23 @@ function Home() {
         <h1 className="text-3xl font-[Inter] font-semibold">
           Featured Reciters & Scholars
         </h1>
-        <div className="w-full flex items-center">
-          <div className="w-20 h-30 group cursor-pointer flex flex-col items-center gap-3 justify-center  mt-5">
+        <div className="w-full flex gap-5 items-center">
+          {
+            creator.map((item)=>{
+              return (
+                <div className="w-20 h-30 group cursor-pointer flex flex-col items-center gap-3 justify-center  mt-5">
             <img
               className="w-full h-20 group-hover:border-3  transition-all  border-yellow-500  rounded-full"
               src="https://i.pinimg.com/736x/11/05/5f/11055f59a68bcbcf257dac2088dfc225.jpg"
               alt=""
             />
             <p className="text-xs text-gray-300 group-hover:text-white ">
-              Mishri Alfasi
+            {item.name}
             </p>
           </div>
+              )
+            })
+          }
         </div>
       </div>
     </section>
